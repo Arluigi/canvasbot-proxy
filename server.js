@@ -14,6 +14,15 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // For LTI form data
 
+// Log all requests for debugging
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.originalUrl}`);
+    if (req.body && Object.keys(req.body).length > 0) {
+        console.log('Body:', req.body);
+    }
+    next();
+});
+
 // LTI Launch endpoint - handle both GET and POST
 app.get('/lti/launch', (req, res) => {
     res.send(`
@@ -209,14 +218,6 @@ app.post('/proxy/chat', async (req, res) => {
         console.error('Proxy error:', error);
         res.status(500).json({ error: 'Failed to forward request to UIUC chat API' });
     }
-});
-
-// Catch-all for debugging
-app.use('*', (req, res, next) => {
-    console.log(`${req.method} ${req.originalUrl}`);
-    console.log('Headers:', req.headers);
-    console.log('Body:', req.body);
-    next();
 });
 
 app.listen(port, () => {
