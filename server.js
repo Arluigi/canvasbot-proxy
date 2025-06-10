@@ -124,7 +124,7 @@ app.post('/lti/launch', (req, res) => {
     <script>
         // Configuration
         const config = {
-            API_KEY: 'uc_4d34e989356e4e73b5b4a50fea694a3b',
+            API_KEY: '',
             COURSE_ID: '${courseId}',
             USER_ID: '${userId}'
         };
