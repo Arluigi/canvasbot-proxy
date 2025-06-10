@@ -14,9 +14,22 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // For LTI form data
 
-// LTI Launch endpoint
+// LTI Launch endpoint - handle both GET and POST
+app.get('/lti/launch', (req, res) => {
+    res.send(`
+        <h2>LTI Launch Endpoint</h2>
+        <p>This endpoint is ready to receive POST requests from Canvas.</p>
+        <p>Status: Server is running correctly</p>
+        <p>Time: ${new Date().toISOString()}</p>
+    `);
+});
+
 app.post('/lti/launch', (req, res) => {
-    console.log('LTI Launch received:', req.body);
+    console.log('LTI Launch received!');
+    console.log('Headers:', req.headers);
+    console.log('Body:', req.body);
+    console.log('Method:', req.method);
+    console.log('URL:', req.url);
     
     // Extract course info from LTI parameters
     const courseId = req.body.context_id || req.body.custom_canvas_course_id || 'default';
@@ -196,6 +209,14 @@ app.post('/proxy/chat', async (req, res) => {
         console.error('Proxy error:', error);
         res.status(500).json({ error: 'Failed to forward request to UIUC chat API' });
     }
+});
+
+// Catch-all for debugging
+app.use('*', (req, res, next) => {
+    console.log(`${req.method} ${req.originalUrl}`);
+    console.log('Headers:', req.headers);
+    console.log('Body:', req.body);
+    next();
 });
 
 app.listen(port, () => {
