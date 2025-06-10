@@ -6,9 +6,12 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Enable CORS for your GitHub Pages domain
+// Enable CORS for Canvas and GitHub Pages
 app.use(cors({
-    origin: 'https://arluigi.github.io'
+    origin: ['https://arluigi.github.io', /.*\.instructure\.com$/, /.*\.canvas\..*$/],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
 
 app.use(express.json());
